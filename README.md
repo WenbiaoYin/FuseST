@@ -1,23 +1,17 @@
-# FST: Improving speech translation by fusing speech and text
+# FuseST: Improving Speech Translation by Fusing Speech and Text
 
-## Overview
-
-
-
-
+This is an implementation of Findings of EMNLP 2023 paper "Improving Speech Translation by Fusing Speech and Text". The implementation based on [fairseq](https://github.com/pytorch/fairseq) codebase.
 
 ## Download Trained Models
 
 The models are trained based on fairseq. You may download all the models at Google drive.
 
-
-
-| **Datasets** |                     **Model Checkpoint**                     |                       **SPM & Vocab**                        | FST-MT BLUE | FST-PT BLUE |
-| :----------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :---------: | :---------: |
-|    En-De     | [Download](https://drive.google.com/file/d/1M8wZtsEgaspI0vRgZinaZ0fi-yDXuL1a/view?usp=share_link) | [spm](https://drive.google.com/file/d/1vsHHQ9w3U6g4Ipo1xDq1rH45P1gV0-NR/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1PfOsFhmFc37Iv6m0TKmnNyCR0I5FaUGI/view?usp=share_link) |    27.7     |    29.2     |
-|    En-Es     | [Download](https://drive.google.com/file/d/1rJS5olcntThH1DHbE_eb5dk4fCW09x97/view?usp=share_link) | [spm](https://drive.google.com/file/d/1pqvyAHCllhXbYU8I5EOGEM4Wj1wU7zQ7/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1xflLhjmfsoXnoTBs6nuslHeQu5giRLqC/view?usp=share_link) |    32.4     |    33.9     |
-|    En-Fr     | [Download](https://drive.google.com/file/d/1ePSSf9FCe58qlVyNi4pxty_zBB61gcp_/view?usp=share_link) | [spm](https://drive.google.com/file/d/1pqvyAHCllhXbYU8I5EOGEM4Wj1wU7zQ7/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1IzImvpJTjIL4tFI_fnV6Ge30neLD3Fb0/view?usp=share_link) |    37.2     |    38.9     |
-|    En-Zh     | [Download](https://drive.google.com/file/d/1oWIHufvk4u2mIq3PfLx_gpBYz-LcWacD/view?usp=share_link) | [spm](https://drive.google.com/file/d/1PfOsFhmFc37Iv6m0TKmnNyCR0I5FaUGI/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1rA6gfL4IDbVUd1vaCXbJ1FdHUDxmRBjQ/view?usp=share_link) |      -      |      -      |
+| **Datasets** |                     **Model Checkpoint**                     |                       **SPM & Vocab**                        | FuseST-MT BLUE | FuseST-PT BLUE |
+| :----------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------: | :------------: |
+|    En-De     | [Download](https://drive.google.com/file/d/1M8wZtsEgaspI0vRgZinaZ0fi-yDXuL1a/view?usp=share_link) | [spm](https://drive.google.com/file/d/1vsHHQ9w3U6g4Ipo1xDq1rH45P1gV0-NR/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1PfOsFhmFc37Iv6m0TKmnNyCR0I5FaUGI/view?usp=share_link) |      27.7      |      29.2      |
+|    En-Es     | [Download](https://drive.google.com/file/d/1rJS5olcntThH1DHbE_eb5dk4fCW09x97/view?usp=share_link) | [spm](https://drive.google.com/file/d/1pqvyAHCllhXbYU8I5EOGEM4Wj1wU7zQ7/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1xflLhjmfsoXnoTBs6nuslHeQu5giRLqC/view?usp=share_link) |      32.4      |      33.9      |
+|    En-Fr     | [Download](https://drive.google.com/file/d/1ePSSf9FCe58qlVyNi4pxty_zBB61gcp_/view?usp=share_link) | [spm](https://drive.google.com/file/d/1pqvyAHCllhXbYU8I5EOGEM4Wj1wU7zQ7/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1IzImvpJTjIL4tFI_fnV6Ge30neLD3Fb0/view?usp=share_link) |      37.2      |      38.9      |
+|    En-Zh     | [Download](https://drive.google.com/file/d/1oWIHufvk4u2mIq3PfLx_gpBYz-LcWacD/view?usp=share_link) | [spm](https://drive.google.com/file/d/1PfOsFhmFc37Iv6m0TKmnNyCR0I5FaUGI/view?usp=share_link) & [vocab](https://drive.google.com/file/d/1rA6gfL4IDbVUd1vaCXbJ1FdHUDxmRBjQ/view?usp=share_link) |       -        |       -        |
 
 
 
@@ -29,8 +23,8 @@ The models are trained based on fairseq. You may download all the models at Goog
 - For training new models, you'll also need an NVIDIA GPU and [NCCL](https://github.com/NVIDIA/nccl)
 
 ```shell
-git clone git@github.com:WenbiaoYin/FST.git
-cd FST
+git clone git@github.com:WenbiaoYin/FuseST.git
+cd FuseST
 pip install --editable ./
 ```
 
@@ -50,8 +44,7 @@ tar -xzvf MUSTC_v1.0_en-de.tar.gz
 2. Then run the following script to generate the yaml configuration file, tsv file, sub-word model and dictionary. In this work, We jointly tokenize the bilingual text (En & X) using [SentencePiece](https://github.com/google/sentencepiece), with a vocabulary size of 10k. For example,
 
 ```
-
-python3 FST/examples/speech_to_text/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type bpe  --vocab-size 16000
+python3 FuseST/examples/speech_to_text/prep_mustc_data.py --data-root ${DATA_PATH} --lang de --vocab-type bpe  --vocab-size 16000
 
 ```
 
@@ -121,15 +114,13 @@ fairseq-train ${PARALLEL_MT_DATA} \
     --patience 10 --skip-invalid-size-inputs-valid-test
 ```
 
-
-
 ### Training
+
+To train the model, take En-De as an example, you may run:
 
 ```shell
 bash train_en2x.sh de
 ```
-
-
 
 ### Evaluate
 
@@ -141,17 +132,16 @@ bash test_en2x.sh de
 
 
 
-
-
 ## Citation
 
-
-
-
-
-
-
-
-
-
+```
+@misc{yin2023improving,
+      title={Improving speech translation by fusing speech and text}, 
+      author={Wenbiao Yin and Zhicheng Liu and Chengqi Zhao and Tao Wang and Jian Tong and Rong Ye},
+      year={2023},
+      eprint={2305.14042},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
 
